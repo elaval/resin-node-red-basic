@@ -4,6 +4,6 @@ set -o errexit
 # 	&& apt-get install -y libudev-dev \
 # 	&& apt-get install -y libusb-1.0-0-dev \
 # 	&& apt-get install -y git
-cd myNode-red
+cd my-node-red
 npm install
 
