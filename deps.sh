@@ -1,7 +1,9 @@
 #!/bin/bash
-
 set -o errexit
-set -o pipefail
+# apt-get update \
+# 	&& apt-get install -y libudev-dev \
+# 	&& apt-get install -y libusb-1.0-0-dev \
+# 	&& apt-get install -y git
+cd myNode-red
+npm install
 
-apt-get update
-apt-get install -y alsa-utils libasound2-dev

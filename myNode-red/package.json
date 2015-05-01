@@ -1,0 +1,33 @@
+{
+  "name": "node-red",
+  "version": "0.10.4",
+  "description": "A visual tool for wiring the Internet of Things",
+  "homepage": "http://nodered.org",
+  "license": "Apache",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/node-red/node-red.git"
+  },
+  "main": "red/red.js",
+  "scripts": {
+    "start": "node red.js",
+    "test": "./node_modules/.bin/grunt"
+  },
+  "bin": {
+    "node-red": "./red.js",
+    "node-red-pi": "bin/node-red-pi"
+  },
+  "contributors": [
+  ],
+  "keywords": [
+  ],
+  "dependencies": {
+    "node-red-contrib-firstmakers": "latest",
+    "arduino-firmata":"latest"
+  },
+  "devDependencies": {
+  },
+  "engines": {
+    "node": ">=0.8 <0.12"
+  }
+}
