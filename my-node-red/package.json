@@ -22,7 +22,8 @@
   "keywords": [
   ],
   "dependencies": {
-    "node-red-contrib-firstmakers": "latest"
+    "node-red-contrib-firstmakers": "latest",
+    "wiring-pi":"latest"
   },
   "devDependencies": {
   },
