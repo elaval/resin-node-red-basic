@@ -22,8 +22,7 @@
   "keywords": [
   ],
   "dependencies": {
-    "node-red-contrib-firstmakers": "latest",
-    "node-red-contrib-slt": "0.0.5"
+    "node-red-contrib-firstmakers": "latest"
   },
   "devDependencies": {
   },
