@@ -23,7 +23,7 @@
   ],
   "dependencies": {
     "node-red-contrib-firstmakers": "latest",
-    "arduino-firmata":"latest"
+    "node-red-contrib-slt": "latest"
   },
   "devDependencies": {
   },
