@@ -130,7 +130,6 @@ module.exports = {
 
     functionGlobalContext: {
         os:require('os'),
-        wpi: require('wiring-pi'),
         // bonescript:require('bonescript'),
         // arduino:require('duino')
         RESIN_DEVICE_UUID: process.env.RESIN_DEVICE_UUID,
