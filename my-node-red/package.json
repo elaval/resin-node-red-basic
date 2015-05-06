@@ -23,6 +23,7 @@
   ],
   "dependencies": {
     "node-red-contrib-firstmakers": "latest",
+    "node-red-contrib-slt": "latest",
     "wiring-pi":"latest"
   },
   "devDependencies": {
