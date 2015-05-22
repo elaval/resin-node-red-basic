@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "preinstall": "bash deps.sh",
-    "start": "node hello.js"
+    "start": "sh start.sh"
   },
   "author": "Lorenzo Stoakes <lstoakes@gmail.com>",
   "license": "ISC",
