@@ -51,6 +51,17 @@ node-red-pi --max-old-space-size=128 --userDir /app/my-node-red -v
 ## Example node-red flow (application)
 I have deployed a basic node-red flow that allows me to get some information from the Rasbberry OS (memory, cpu load, ...) and expose it as a restful API:
 
+![Flow](https://cloud.githubusercontent.com/assets/68602/7867506/6a883e88-056e-11e5-8477-6f05b90ebb83.png)
+
+This example has 3 nodes:
+-- [get] /info: An *http in* node which allows us to create a web service that listens to calls on *url*/info
+
+-- Os Info: Javascript function that will build a message payload with info from the operating system (freemem, totalmem, loadavg, uptime)
+
+-- http:  Http response that sends back the message payload that was built in OS Info
+
+
+
 
 I am NOT using the RPi gpio so I did not explored the installation configuration of this (actually I did explore it without success, but since I was not going to use it I did not explored it further).
 
