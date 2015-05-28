@@ -46,7 +46,7 @@ npm install -g -unsafe-perm node-red
 node-red-pi --max-old-space-size=128 --userDir /app/my-node-red -v
 ```
 
---max-old-space-size=128  "limits the space it can use to 128MB before cleaning up" and --userDir let's you define the directory where your settings.js will be located.
+ - max-old-space-size=128  "limits the space it can use to 128MB before cleaning up" and --userDir let's you define the directory where your settings.js will be located.
 
 ## Example node-red flow (application)
 I have deployed a basic node-red flow that allows me to get some information from the Rasbberry OS (memory, cpu load, ...) and expose it as a restful API:
@@ -54,18 +54,43 @@ I have deployed a basic node-red flow that allows me to get some information fro
 ![Flow](https://cloud.githubusercontent.com/assets/68602/7867506/6a883e88-056e-11e5-8477-6f05b90ebb83.png)
 
 This example has 3 nodes:
--- [get] /info: An *http in* node which allows us to create a web service that listens to calls on *url*/info
+ - [get] /info: An *http in* node which allows us to create a web service that listens to calls on *url*/info
 
--- Os Info: Javascript function that will build a message payload with info from the operating system (freemem, totalmem, loadavg, uptime)
+![http in](https://cloud.githubusercontent.com/assets/68602/7867823/231ea9b8-0570-11e5-86bf-336b1350c306.png)
 
--- http:  Http response that sends back the message payload that was built in OS Info
+ - Os Info: Javascript function that will build a message payload with info from the operating system (freemem, totalmem, loadavg, uptime)
 
+![js](https://cloud.githubusercontent.com/assets/68602/7867828/2844bbb2-0570-11e5-86c6-39807ac51c13.png)
 
+ - http:  Http response that sends back the message payload that was built in OS Info
 
+![response](https://cloud.githubusercontent.com/assets/68602/7867833/2da8a87a-0570-11e5-96b6-fd8282b65023.png)
 
 I am NOT using the RPi gpio so I did not explored the installation configuration of this (actually I did explore it without success, but since I was not going to use it I did not explored it further).
 
+So ... for all this to work I defined the following files:
 - ./my-node-red/settings.js: 
+The key configuration here is:
+
+  * uiPort: 8080 // I redefined this from the default 1880 to 8080, which is exposed by resin.io to the Internet (this allows me to connect to the webservice from anywhere in the Internet)
+
+  * flowFile: 'flows.json' // The name of the flow file that is explained below
+
+  * functionGlobalContext: { os:require('os') } // This allows me to access node "os" module in node-red functions through the global variable **context.global.os** 
+
+```javascript
+module.exports = {
+    uiPort: 8080,
+    mqttReconnectTime: 15000,
+    serialReconnectTime: 15000,
+    debugMaxLength: 1000,
+    flowFile: 'flows.json',
+    functionGlobalContext: {
+        os:require('os'),
+    },
+}
+```
+
 
 
 
