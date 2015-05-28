@@ -91,6 +91,13 @@ module.exports = {
 }
 ```
 
+- ./my-node-red/flows.json: 
+It i snot easy to read the content of this file .. but it defines the 3 nodes shown in the figures shown above
+
+```json
+[{"id":"f20eebcd.0df118","type":"http in","name":"","url":"/info","method":"get","x":114,"y":122,"z":"e994e0ac.166b2","wires":[["164685d1.e9b97a"]]},{"id":"164685d1.e9b97a","type":"function","name":"Os Info","func":"msg.payload = {\n    freemem: context.global.os.freemem(),\n    totalmem: context.global.os.totalmem(),\n    loadavg: context.global.os.loadavg(),\n    uptime: context.global.os.uptime()\n}\nreturn msg;","outputs":1,"valid":true,"x":254,"y":122,"z":"e994e0ac.166b2","wires":[["f8acf7bd.075308"]]},{"id":"f8acf7bd.075308","type":"http response","name":"","x":421,"y":122,"z":"e994e0ac.166b2","wires":[]}]
+```
+
 
 
 
