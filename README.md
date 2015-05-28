@@ -97,8 +97,77 @@ It i snot easy to read the content of this file .. but it defines the 3 nodes sh
 ```json
 [{"id":"f20eebcd.0df118","type":"http in","name":"","url":"/info","method":"get","x":114,"y":122,"z":"e994e0ac.166b2","wires":[["164685d1.e9b97a"]]},{"id":"164685d1.e9b97a","type":"function","name":"Os Info","func":"msg.payload = {\n    freemem: context.global.os.freemem(),\n    totalmem: context.global.os.totalmem(),\n    loadavg: context.global.os.loadavg(),\n    uptime: context.global.os.uptime()\n}\nreturn msg;","outputs":1,"valid":true,"x":254,"y":122,"z":"e994e0ac.166b2","wires":[["f8acf7bd.075308"]]},{"id":"f8acf7bd.075308","type":"http response","name":"","x":421,"y":122,"z":"e994e0ac.166b2","wires":[]}]
 ```
+- ./my-node-red/package.json: Needed for installing additional node-red nodes and/or node modules via npm (they should be specified as dependencies and a "npm install" must be run in my-node-red).  In this example no dependnecies are required. 
+
+## Making it work
+The final repository looks like this 
+![repo](https://cloud.githubusercontent.com/assets/68602/7872145/aaab2ef2-058d-11e5-9970-fe36e8025e4a.png)
+
+Assuming that you have a resin.io account, application and device connected ... when you push your repositoy to resin you should get something like:
+
+```
+$ git push resin master
+Counting objects: 4, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 418 bytes | 0 bytes/s, done.
+Total 4 (delta 3), reused 0 (delta 0)
+
+Starting build for xxxxx/xxxxx
+Step 0 : FROM resin/armv7hf-node:0.10.22
+ ---> 85840a1e36a1
+Step 1 : RUN mkdir -p /usr/src/app && ln -s /usr/src/app /app
+(... MANY MORE MESSAGES ...)
+Step 5 : CMD npm start
+ ---> Running in 16c9401a4c80
+ ---> 8e7d251b0770
+Removing intermediate container 16c9401a4c80
+Successfully built 8e7d251b0770
+
+-----> Image created successfully!
+-----> Uploading image..
+       Image uploaded successfully!
+Build took 4 minutes, and 30 seconds
+                            \
+                             \
+                              \\
+                               \\
+                                >\/7
+                            _.-(6'  \
+                           (=___._/` \
+                                )  \ |
+                               /   / |
+                              /    > /
+                             j    < _\
+                         _.-' :      ``.
+                         \ r=._\        `.
+                        <`\\_  \         .`-.
+                         \ r-7  `-. ._  ' .  `\
+                          \`,      `-.`7  7)   )
+                           \/         \|  \'  / `-._
+                                      ||    .'
+                                       \\  (
+                                        >\  >
+                                    ,.-' >.'
+                                   <.'_.''
+                                     <'
 
 
+To ernesto_laval@git.resin.io:ernesto_laval/testpi2.git
+   cf25632..6467369  master -> master
+```
+In the middle I do get some errors associated to unicode/ucsdet.h, but apparently it is not a fatal error and does not prevent the application to run
+
+```
+make: Entering directory '/usr/local/lib/node_modules/node-red/node_modules/irc/node_modules/node-icu-charset-detector/build'
+  CXX(target) Release/obj.target/node-icu-charset-detector/node-icu-charset-detector.o
+../node-icu-charset-detector.cpp:5:28: fatal error: unicode/ucsdet.h: No such file or directory
+ #include <unicode/ucsdet.h>
+                            ^
+compilation terminated.
+(...)
+```
+After the application is downloaded ans started in the device (if everything goes OK) you will have node-red running in your RPi
 
 
 
