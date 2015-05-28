@@ -6,16 +6,16 @@ Interested in running applications on devices that are connected to the Internet
 
 **resin.io**: a service that "magically" allows you to push your applications into yoru devices distributed through the Internet
 
-**node-red**: a nodejs based software/concept that allows you to wire different nodes (pieces of software) that communicate & process messages ... and also connect to services & storage services in the Internet.
+**node-red**: a nodejs based software/concept that allows you to wire different nodes (pieces of software) that communicate & process messages ... and also connect to services & storage in the Internet.
 
 I am not going through all the details of these great components (you can google and visit their pages & documentation).  I will assume that you are familiar with them and share my experiencie working with the three of them together.
 
 Resin.io has good documentation to let you up & running with a node.js application on a RPi.  But when I tried to run node-red, there where pieces of the puzzle that I couldn't find in the docs (by the way [Using Resin.io with Node-RED](http://blog.thiseldo.co.uk/?p=1322) is a great post that gave me many lights ... but unfortunately I couldn't get all working with their instructions).
 
 I know that you know this, but let's put together some of the pieces of a resin repository:
-- Dockerfile: if you are not using the "prebuilt" facilities that resin provides for nodejs applications, you will need to have a Dockerfile which allows you to define how resin will build an image for your Operating System and software components.  If you don't have a Dockerfile, but you do have a node application (with it's package.json file) then resin will provide you with a prebuilt nodejs image which is preconfigured to make your life simple.
+- Dockerfile: if you are not using the "prebuilt" facilities that resin provides for nodejs applications, you will need to have a Dockerfile which allows you to define how resin will build an image for your Operating System and software components.  If you don't have a Dockerfile, but you do have a node application (with it's package.json file) then resin will provide you with a prebuilt nodejs image which is preconfigured to make your life simple. In the following example I DO NOT use a Dockerfile (but in a later example I had to use it since the whole process ended up being much faster).
 
-- package.json: if you work with nodejs applications, you know what this is.  I just want to highlight that thsi files defines the "scripts" that will be run before your application starts (for example to install additional pieces of software such as node-red) and then run your actual application:
+- package.json: if you work with nodejs applications, you know what this is.  I just want to highlight that thsi file defines the "scripts" that will run before your application starts (for example to install additional pieces of software such as node-red) and then run your actual application:
 
 *package.json*
 ```
@@ -36,7 +36,7 @@ In this example the script "deps.sh" will be run before the application and the 
 set -o errexit
 npm install -g -unsafe-perm node-red
 ```
-`node-red` command is installed in `/usr/local/bin` as well as  `node-red-pi` which is recommended for running node-red in RPi due to limited memory constrains (see http://nodered.org/docs/hardware/raspberrypi.html).
+In `/usr/local/bin` is isntalled the command `node-red` as well as  `node-red-pi` which is recommended for running node-red in RPi due to memory constrains (see http://nodered.org/docs/hardware/raspberrypi.html).
 
 - start.sh (this can have any name you define in package.json): Our application will be an instance of node-red that loads a specific settings.js file and a specific file with the node-red flow definition (which in my case is flows.js).  I decided to create a new directory in my repository which contains my node-red application files (settings.js, flows.js and another package.json in case node-red nodes and/or dependencies are required for your node-red application). 
 
@@ -66,7 +66,7 @@ This example has 3 nodes:
 
 ![response](https://cloud.githubusercontent.com/assets/68602/7867833/2da8a87a-0570-11e5-96b6-fd8282b65023.png)
 
-I am NOT using the RPi gpio so I did not explored the installation configuration of this (actually I did explore it without success, but since I was not going to use it I did not explored it further).
+I am NOT using the RPi gpio so I did not explored the installation configuration of this (actually I did explore it without success, but since I was not going to use it I did not explore it further).
 
 So ... for all this to work I defined the following files:
 - ./my-node-red/settings.js: 
@@ -92,7 +92,7 @@ module.exports = {
 ```
 
 - ./my-node-red/flows.json: 
-It i snot easy to read the content of this file .. but it defines the 3 nodes shown in the figures shown above
+It is not easy to read the text content of this file .. but it defines the 3 nodes shown in the figures shown above
 
 ```json
 [{"id":"f20eebcd.0df118","type":"http in","name":"","url":"/info","method":"get","x":114,"y":122,"z":"e994e0ac.166b2","wires":[["164685d1.e9b97a"]]},{"id":"164685d1.e9b97a","type":"function","name":"Os Info","func":"msg.payload = {\n    freemem: context.global.os.freemem(),\n    totalmem: context.global.os.totalmem(),\n    loadavg: context.global.os.loadavg(),\n    uptime: context.global.os.uptime()\n}\nreturn msg;","outputs":1,"valid":true,"x":254,"y":122,"z":"e994e0ac.166b2","wires":[["f8acf7bd.075308"]]},{"id":"f8acf7bd.075308","type":"http response","name":"","x":421,"y":122,"z":"e994e0ac.166b2","wires":[]}]
@@ -167,7 +167,29 @@ make: Entering directory '/usr/local/lib/node_modules/node-red/node_modules/irc/
 compilation terminated.
 (...)
 ```
-After the application is downloaded ans started in the device (if everything goes OK) you will have node-red running in your RPi
+After the application is downloaded ans started in the device (if everything goes OK) you will have node-red running in your RPi.
 
+These are some of the log messages you should see in your resin.io logs for the application:
+![logs](https://cloud.githubusercontent.com/assets/68602/7872661/af8c177a-0591-11e5-8ab1-c7f37b77684d.png)
+![logs2](https://cloud.githubusercontent.com/assets/68602/7872666/af90606e-0591-11e5-9a98-b80c73d5aa23.png)
+
+As you can see, node-red displays error messages for the nodes that are not loaded correctly (due to lack of correct dependencies) but since I am not using those nodes, I will not worry.
+
+If you open a webbrowser with the device id & port 8080 you will get node-red working panel (in my case at http://192.168.0.120:8080)
+![window1](https://cloud.githubusercontent.com/assets/68602/7872665/af903e36-0591-11e5-98e4-949a4455349f.png)
+
+And if you try the web service created in your flow (in my case http://192.168.0.120:8080/info), you will get a JSON with the RPi OS info:
+![info1](https://cloud.githubusercontent.com/assets/68602/7872664/af8e1084-0591-11e5-8311-4578a7da73bc.png)
+
+If you expose the port 8080 to the public, you will also be able to connect to the webservice from the Internet:
+
+![expose](https://cloud.githubusercontent.com/assets/68602/7872662/af8c924a-0591-11e5-864b-36a8cea72898.png)
+![info2](https://cloud.githubusercontent.com/assets/68602/7872659/af7271da-0591-11e5-9a2d-002e9b94b902.png)
+
+(You will be tempted to edit your flows from the public address, but for some reason the connection to the server will be lost)
+
+This is a working demo of node-red on RPi with resin!!
+
+I tried making changes to my flows (edit the flows, then copy the result into my flows.json file, commit changes and push again) and ... it works but takes a loooooooong time each tiny modification since node-red is reinstalled each time you push changes to your repo.  After a while I decided not to use the "simple" node.js prebuilt solution provided by resin and I included a Dockerfile that builds the image with the node-red installation.  This was much faster since each new push used the cached version of the image with node-red installed (I will detail this in another place).
 
 
