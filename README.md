@@ -36,7 +36,7 @@ In this example the script "deps.sh" will be run before the application and the 
 set -o errexit
 npm install -g -unsafe-perm node-red
 ```
-`node-red` command is installed in `/usr/local/bin` as well as  `node-red-rpi` which is recommended for running node-red in RPi due to limited memory constrains (see http://nodered.org/docs/hardware/raspberrypi.html).
+`node-red` command is installed in `/usr/local/bin` as well as  `node-red-pi` which is recommended for running node-red in RPi due to limited memory constrains (see http://nodered.org/docs/hardware/raspberrypi.html).
 
 - start.sh (this can have any name you define in package.json): Our application will be an instance of node-red that loads a specific settings.js file and a specific file with the node-red flow definition (which in my case is flows.js).  I decided to create a new directory in my repository which contains my node-red application files (settings.js, flows.js and another package.json in case node-red nodes and/or dependencies are required for your node-red application). 
 
@@ -45,6 +45,17 @@ npm install -g -unsafe-perm node-red
 #!/bin/bash
 node-red-pi --max-old-space-size=128 --userDir /app/my-node-red -v
 ```
+
+--max-old-space-size=128  "limits the space it can use to 128MB before cleaning up" and --userDir let's you define the directory where your settings.js will be located.
+
+## Example node-red flow (application)
+I have deployed a basic node-red flow that allows me to get some information from the Rasbberry OS (memory, cpu load, ...) and expose it as a restful API:
+
+
+I am NOT using the RPi gpio so I did not explored the installation configuration of this (actually I did explore it without success, but since I was not going to use it I did not explored it further).
+
+- ./my-node-red/settings.js: 
+
 
 
 
